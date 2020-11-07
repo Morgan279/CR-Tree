@@ -1,6 +1,9 @@
 package ecnu.edu.wclong.rtree.sdo;
 
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.Objects;
 import java.util.UUID;
 
@@ -16,27 +19,25 @@ public class RTreeEntry<T> {
 
     private RTreeNode<T> locatedNode;
 
-    public RTreeEntry(Rectangle rectangle, T value) {
+    @Getter
+    @Setter
+    private PruneMeta pruneMeta;
+
+    public RTreeEntry(Rectangle rectangle, PruneMeta pruneMeta, T value) {
         this.rectangle = rectangle;
+        this.pruneMeta = pruneMeta;
         this.value = value;
         this.id = UUID.randomUUID().toString();
     }
 
-    public RTreeEntry(Rectangle rectangle, RTreeNode<T> locatedNode, T value) {
-        this.rectangle = rectangle;
-        this.locatedNode = locatedNode;
-        this.value = value;
-        this.id = UUID.randomUUID().toString();
-    }
-
-    public RTreeEntry(RTreeNode<T> locatedNode, RTreeNode<T> children) {
+    public RTreeEntry(RTreeNode<T> children) {
         if (null == children) {
             throw new IllegalArgumentException("cannot init entry when children is null");
         }
 
-        this.rectangle = children.getRectangle();
-        this.locatedNode = locatedNode;
         this.children = children;
+        this.rectangle = children.getRectangle();
+        this.pruneMeta = children.getPruneMeta();
         this.id = UUID.randomUUID().toString();
     }
 
@@ -51,8 +52,9 @@ public class RTreeEntry<T> {
 
     public void onChildrenChange() {
         this.rectangle = children.getRectangle();
+        this.pruneMeta = children.getPruneMeta();
         //ascend
-        this.locatedNode.updateParentRectangleOnEntryChange();
+        this.locatedNode.updateParentOnEntryChange();
     }
 
     @Override

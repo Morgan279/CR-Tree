@@ -1,6 +1,7 @@
 package ecnu.edu.wclong.rtree.algorithm;
 
 
+import ecnu.edu.wclong.pojo.LabelPath;
 import ecnu.edu.wclong.rtree.sdo.RTreeEntry;
 import ecnu.edu.wclong.rtree.sdo.RTreeNode;
 import ecnu.edu.wclong.rtree.sdo.Rectangle;
@@ -12,6 +13,8 @@ import java.util.Set;
 
 public interface RTreeAlgorithm {
     <T> void search(Rectangle searchRectangle, RTreeNode<T> rootNode, Set<RTreeEntry<T>> resultSet);
+
+    <T> void search(Rectangle searchRectangle, LabelPath queryPath, RTreeNode<T> rootNode, Set<RTreeEntry<T>> resultSet);
 
     <T> RTreeNode<T> chooseLeaf(RTreeNode<T> rootNode, RTreeEntry<T> newEntry);
 

@@ -25,8 +25,8 @@ public class Bound {
     }
 
     public boolean isIntersect(Bound bound) {
-        return this.getLowerBound() > bound.getHigherBound()
-                || this.getHigherBound() < bound.getLowerBound();
+        return !(this.getLowerBound() > bound.getHigherBound()
+                || this.getHigherBound() < bound.getLowerBound());
     }
 
     @Override

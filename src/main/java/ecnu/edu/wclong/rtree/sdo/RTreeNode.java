@@ -1,7 +1,10 @@
 package ecnu.edu.wclong.rtree.sdo;
 
 
+import cn.hutool.core.collection.CollUtil;
+import ecnu.edu.wclong.rtree.util.PruneUtil;
 import ecnu.edu.wclong.rtree.util.RectangleUtil;
+import lombok.Getter;
 
 import java.util.List;
 
@@ -12,16 +15,20 @@ public abstract class RTreeNode<T> {
 
     protected RTreeEntry<T> parent;
 
+    @Getter
+    protected PruneMeta pruneMeta;
+
     public void addEntry(RTreeEntry<T> newEntry) {
         this.entries.add(newEntry);
         //update rectangle when new Entry is added
-        this.updateParentRectangleOnEntryChange();
+        this.updateParentOnEntryChange();
     }
 
-    public void updateParentRectangleOnEntryChange() {
-        //update current node's rectangle when new Entry is changed
+    public void updateParentOnEntryChange() {
+        //update current node when new Entry is changed
         this.rectangle = RectangleUtil.getBoundedRectangleByEntries(entries);
-        //update parent's rectangle when new Entry is changed
+        this.pruneMeta = PruneUtil.combineEntryPruneMeta(entries);
+        //update parent when new Entry is changed
         if (null != this.parent) {
             this.parent.onChildrenChange();
         }
@@ -30,9 +37,16 @@ public abstract class RTreeNode<T> {
     public boolean removeEntry(RTreeEntry<T> targetEntry) {
         boolean isDeleted = this.entries.remove(targetEntry);
         if (isDeleted) {
-            this.updateParentRectangleOnEntryChange();
+            this.updateParentOnEntryChange();
         }
         return isDeleted;
+    }
+
+    protected PruneMeta generatePruneMeta(List<RTreeEntry<T>> entries) {
+        if (CollUtil.isNotEmpty(entries)) {
+            return PruneUtil.combineEntryPruneMeta(entries);
+        }
+        return null;
     }
 
     public List<RTreeEntry<T>> getEntries() {

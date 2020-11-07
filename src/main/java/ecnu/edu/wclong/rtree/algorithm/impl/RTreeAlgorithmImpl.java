@@ -1,6 +1,7 @@
 package ecnu.edu.wclong.rtree.algorithm.impl;
 
 
+import ecnu.edu.wclong.pojo.LabelPath;
 import ecnu.edu.wclong.rtree.algorithm.RTreeAlgorithm;
 import ecnu.edu.wclong.rtree.sdo.RTreeEntry;
 import ecnu.edu.wclong.rtree.sdo.RTreeNode;
@@ -31,8 +32,27 @@ public class RTreeAlgorithmImpl implements RTreeAlgorithm {
     }
 
     @Override
+    public <T> void search(Rectangle searchRectangle, LabelPath queryPath, RTreeNode<T> rootNode, Set<RTreeEntry<T>> resultSet) {
+        if (!searchRectangle.isOverlap(rootNode.getRectangle()) || rootNode.getPruneMeta().isCanBePruned(queryPath)) {
+            return;
+        }
+
+        for (RTreeEntry<T> entry : rootNode.getEntries()) {
+            if (!searchRectangle.isOverlap(entry.getRectangle()) || entry.getPruneMeta().isCanBePruned(queryPath)) {
+                continue;
+            }
+
+            if (rootNode.isLeafNode()) {
+                resultSet.add(entry);
+            } else {
+                search(searchRectangle, queryPath, entry.getChildren(), resultSet);
+            }
+        }
+    }
+
+    @Override
     public <T> RTreeNode<T> chooseLeaf(RTreeNode<T> rootNode, RTreeEntry<T> newEntry) {
-        if (null == rootNode || rootNode.isLeafNode()) return rootNode;
+        if (rootNode.isLeafNode()) return rootNode;
 
         RTreeNode<T> selectedNode = null;
         double selectNodeEnlargeArea = Double.MAX_VALUE;

@@ -14,17 +14,17 @@ public class RTreeNonLeafNode<T> extends RTreeNode<T> {
         this.entries = entries;
         this.parent = parent;
         this.rectangle = generateRectangle(entries);
+        this.pruneMeta = generatePruneMeta(entries);
     }
 
     public RTreeNonLeafNode(List<RTreeEntry<T>> entries) {
         this.entries = entries;
         this.parent = null;
         this.rectangle = generateRectangle(entries);
+        this.pruneMeta = generatePruneMeta(entries);
     }
 
     private Rectangle generateRectangle(List<RTreeEntry<T>> entries) {
-        if (null == entries || entries.isEmpty()) return null;
-
         return RectangleUtil.getBoundedRectangleByEntries(entries);
     }
 
