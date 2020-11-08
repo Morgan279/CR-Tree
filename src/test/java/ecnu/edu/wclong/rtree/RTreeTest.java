@@ -36,7 +36,7 @@ class RTreeTest {
 
     @Test
     public void insert() {
-        for (int i = 0; i < 3000; ++i) {
+        for (int i = 0; i < 5000; ++i) {
             List<RTreeEntry<Integer>> entries = generateRandomEntry();
             labelPathRTree.insert(entries.get(0));
             pathCodeRTree.insert(entries.get(1));
@@ -67,6 +67,7 @@ class RTreeTest {
         System.out.println("rtree search spend time：" + (endTime - startTime) + "ms");
     }
 
+
     private List<RTreeEntry<Integer>> generateRandomEntry() {
         int dimension = 2;
         int value = RandomUtil.getIntegerRandomNumber(dimension, 100);
@@ -75,15 +76,19 @@ class RTreeTest {
             boundVector.setDimensionBound(i, new Bound(value - 1 - i, value + 1 + i));
         }
         Rectangle rectangle = new Rectangle(boundVector);
-        List<Label> labels = new ArrayList<>();
-        for (int i = 0; i < RandomUtil.getIntegerRandomNumber(2, 4); ++i) {
-            labels.add(NonSpatialLabel.getRandomTestLabel());
-        }
-        LabelPath labelPath = new LabelPath(labels);
+        LabelPath labelPath = generateRandomLabelPath(RandomUtil.getIntegerRandomNumber(2, 5));
         return CollUtil.newArrayList(
                 new RTreeEntry<>(rectangle, new LabelPathSet(CollUtil.newHashSet(labelPath)), value),
                 new RTreeEntry<>(rectangle, new PathCode(CollUtil.newArrayList(pathProcessor.encode(labelPath)), pathProcessor), value)
         );
+    }
+
+    private LabelPath generateRandomLabelPath(int hop) {
+        List<Label> labels = new ArrayList<>();
+        for (int i = 0; i < hop; ++i) {
+            labels.add(NonSpatialLabel.getRandomTestLabel());
+        }
+        return new LabelPath(labels);
     }
 
     private RTreeEntry<Integer> generateRandomPathCodeEntry() {
