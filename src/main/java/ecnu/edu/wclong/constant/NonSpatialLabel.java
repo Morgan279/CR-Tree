@@ -10,14 +10,14 @@ public enum NonSpatialLabel implements Label {
     NON_SPATIAL_2(2),
     NON_SPATIAL_3(3),
     NON_SPATIAL_4(4),
-    NON_SPATIAL_5(5),
-    NON_SPATIAL_6(6),
-    NON_SPATIAL_7(7),
-    NON_SPATIAL_8(8),
-    NON_SPATIAL_9(9),
-    NON_SPATIAL_10(10),
-    NON_SPATIAL_11(11),
-    NON_SPATIAL_12(12);
+    NON_SPATIAL_5(5);
+//    NON_SPATIAL_6(6),
+//    NON_SPATIAL_7(7),
+//    NON_SPATIAL_8(8),
+//    NON_SPATIAL_9(9),
+//    NON_SPATIAL_10(10),
+//    NON_SPATIAL_11(11),
+//    NON_SPATIAL_12(12);
 
     private int value;
 

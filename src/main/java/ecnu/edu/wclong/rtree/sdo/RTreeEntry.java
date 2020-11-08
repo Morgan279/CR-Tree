@@ -70,6 +70,11 @@ public class RTreeEntry<T> {
         return Objects.hash(getId());
     }
 
+    @Override
+    public String toString() {
+        return this.getValue().toString();
+    }
+
     public Rectangle getRectangle() {
         return rectangle;
     }

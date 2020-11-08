@@ -32,6 +32,7 @@ public class RTree<T> {
 
     public RTree() {
         this.loadFactor = 50;
+        this.separator = new RTreeNodeQuadraticSeparator();
         this.rTreeAlgorithm = new RTreeAlgorithmImpl();
     }
 
@@ -76,10 +77,14 @@ public class RTree<T> {
             this.initRootNode(newEntry);
         }
 
+        long startTime = System.currentTimeMillis();
         RTreeNode<T> targetNode = rTreeAlgorithm.chooseLeaf(rootNode, newEntry);
         newEntry.setLocatedNode(targetNode);
         targetNode.addEntry(newEntry);
         splitNodeIfNeed(targetNode);
+
+        long endTime = System.currentTimeMillis();
+        //System.out.println("split spend time：" + (endTime - startTime) + "ms");
     }
 
 

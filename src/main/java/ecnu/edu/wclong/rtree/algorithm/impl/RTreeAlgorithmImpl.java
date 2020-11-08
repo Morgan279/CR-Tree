@@ -18,7 +18,7 @@ public class RTreeAlgorithmImpl implements RTreeAlgorithm {
     @Override
     public <T> void search(Rectangle searchRectangle, RTreeNode<T> rootNode, Set<RTreeEntry<T>> resultSet) {
         //pruning directly if the node's rectangle does not overlap the search rectangle
-        if (!searchRectangle.isOverlap(rootNode.getRectangle())) return;
+        if (null == rootNode || !searchRectangle.isOverlap(rootNode.getRectangle())) return;
 
         for (RTreeEntry<T> entry : rootNode.getEntries()) {
             if (!searchRectangle.isOverlap(entry.getRectangle())) continue;
@@ -33,7 +33,7 @@ public class RTreeAlgorithmImpl implements RTreeAlgorithm {
 
     @Override
     public <T> void search(Rectangle searchRectangle, LabelPath queryPath, RTreeNode<T> rootNode, Set<RTreeEntry<T>> resultSet) {
-        if (!searchRectangle.isOverlap(rootNode.getRectangle()) || rootNode.getPruneMeta().isCanBePruned(queryPath)) {
+        if (null == rootNode || !searchRectangle.isOverlap(rootNode.getRectangle()) || rootNode.getPruneMeta().isCanBePruned(queryPath)) {
             return;
         }
 
@@ -42,7 +42,7 @@ public class RTreeAlgorithmImpl implements RTreeAlgorithm {
                 continue;
             }
 
-            if (rootNode.isLeafNode()) {
+            if (rootNode.isLeafNode() && entry.getPruneMeta().isEntrySatisfied(queryPath)) {
                 resultSet.add(entry);
             } else {
                 search(searchRectangle, queryPath, entry.getChildren(), resultSet);

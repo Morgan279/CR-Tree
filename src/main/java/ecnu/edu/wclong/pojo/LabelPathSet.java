@@ -27,6 +27,11 @@ public class LabelPathSet implements PruneMeta {
     }
 
     @Override
+    public boolean isEntrySatisfied(LabelPath queryPath) {
+        return meta.contains(queryPath);
+    }
+
+    @Override
     public PathCode getPathCode() {
         return null;
     }

@@ -22,6 +22,7 @@ public class PathProcessor {
 
     private Map<Label, Integer> labelIdMap;
 
+
     public PathProcessor(int labelSum, int maxHop) {
         this.labelSum = labelSum;
         this.maxHop = maxHop;

@@ -16,11 +16,6 @@ public class PathCode implements PruneMeta {
 
     private PathProcessor pathProcessor;
 
-//    public PathCode(PathProcessor pathProcessor) {
-////        pathCodes = new ArrayList<>();
-////        this.pathProcessor = pathProcessor;
-////    }
-
     @Override
     public PruneMeta combine(PruneMeta pruneMeta) {
         return new PathCode(combinePathCode(pruneMeta.getPathCode()), pathProcessor);
@@ -35,6 +30,11 @@ public class PathCode implements PruneMeta {
             }
         }
         return true;
+    }
+
+    @Override
+    public boolean isEntrySatisfied(LabelPath queryPath) {
+        return pathCodes.get(0) == pathProcessor.encode(queryPath);
     }
 
 

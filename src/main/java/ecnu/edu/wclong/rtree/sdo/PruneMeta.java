@@ -9,6 +9,8 @@ public interface PruneMeta {
 
     boolean isCanBePruned(LabelPath queryPath);
 
+    boolean isEntrySatisfied(LabelPath queryPath);
+
     PathCode getPathCode();
 
     LabelPathSet getLabelPathSet();
