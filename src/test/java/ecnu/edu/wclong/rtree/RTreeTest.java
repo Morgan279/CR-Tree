@@ -1,6 +1,7 @@
 package ecnu.edu.wclong.rtree;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.lang.Console;
 import ecnu.edu.wclong.constant.NonSpatialLabel;
 import ecnu.edu.wclong.pojo.LabelPath;
 import ecnu.edu.wclong.pojo.LabelPathSet;
@@ -15,6 +16,7 @@ import ecnu.edu.wclong.util.RandomUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.neo4j.graphdb.Label;
+import org.openjdk.jol.info.GraphLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +38,7 @@ class RTreeTest {
 
     @Test
     public void insert() {
-        for (int i = 0; i < 5000; ++i) {
+        for (int i = 0; i < 1000; ++i) {
             List<RTreeEntry<Integer>> entries = generateRandomEntry();
             labelPathRTree.insert(entries.get(0));
             pathCodeRTree.insert(entries.get(1));
@@ -65,6 +67,7 @@ class RTreeTest {
 
         long endTime = System.currentTimeMillis();
         System.out.println("rtree search spend time：" + (endTime - startTime) + "ms");
+        estimateRTreeSize();
     }
 
 
@@ -91,16 +94,13 @@ class RTreeTest {
         return new LabelPath(labels);
     }
 
-    private RTreeEntry<Integer> generateRandomPathCodeEntry() {
-        int dimension = 2;
-        int value = RandomUtil.getIntegerRandomNumber(dimension, 100);
-        BoundVector boundVector = new BoundVector(dimension);
-        for (int i = 0; i < dimension; ++i) {
-            boundVector.setDimensionBound(i, new Bound(value - 1 - i, value + 1 + i));
-        }
-        Rectangle rectangle = new Rectangle(boundVector);
-        long code = RandomUtil.getIntegerRandomNumber(0, 1000);
-        PathCode pathCode = new PathCode(CollUtil.newArrayList(code), pathProcessor);
-        return new RTreeEntry<>(rectangle, pathCode, value);
+    private void estimateRTreeSize() {
+        long pathCodeRTreeSize = GraphLayout.parseInstance(pathCodeRTree).totalSize();
+        long labelPathCodeSize = GraphLayout.parseInstance(labelPathRTree).totalSize();
+        double safeRate = (double) (labelPathCodeSize - pathCodeRTreeSize) / labelPathCodeSize;
+        Console.log("pathCodeRTreeSize {}", pathCodeRTreeSize);
+        Console.log("labelPathCodeSize {}", labelPathCodeSize);
+        Console.log("safe rate {} %", safeRate * 100);
     }
+
 }
